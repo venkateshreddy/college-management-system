@@ -22,7 +22,6 @@ export const index = (req, res) =>
   sendAllDepartments(res);
 
 export const searchDepartment = (req, res) => {
-  console.log(req.query);
   Departments.find({ name: { '$regex' : req.query.string, '$options' : 'i' }}).exec((err, results) => {
     if (err) {
       res.send(err);
@@ -53,11 +52,13 @@ export const destroy = (req, res) =>
   }); 
 
   const sendAllDepartments = (res) => {
-    Departments.find((er, departments) => {
-      if (!er) {
-        res.send(departments);
-      } else {
-        res.send(er);
-      }
+    Departments.find()
+    .populate({path: 'faculty', select: 'name qualification designation'})
+    .populate({path: 'hod', select: 'name qualification designation'})
+    .then(results => {
+      res.send(results);
+    })
+    .catch(err => {
+      res.send(err);
     })
   }

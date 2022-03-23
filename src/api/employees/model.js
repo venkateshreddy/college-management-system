@@ -1,12 +1,12 @@
 import mongoose from 'mongoose'
 
-const studentSchema = new mongoose.Schema({
-    // userId: {
-    //     type: mongoose.SchemaTypes.ObjectId,
-    //     ref: 'Users',
-    //     required: true,
-    //     unique: true
-    // },
+const employeesSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'Users',
+        required: true,
+        unique: true
+    },
     name:{
         type: String,
         required: true
@@ -26,6 +26,12 @@ const studentSchema = new mongoose.Schema({
             message: "Please enter valid email"
         }
     },
+    employeeType: {
+        type: String,
+        enum: ["Teaching", "Non-Teaching"],
+        required: true,
+        default: "Teaching"
+    },
     dob: {
         type: Date,
         required: true
@@ -35,20 +41,18 @@ const studentSchema = new mongoose.Schema({
         required: true,
         enum: ["Male", "Female", "Others"]
     },
-    branch: {
+    qualification: {
         type: String,
-        required: true,
-        enum: ["ECE", "CSE", "EEE", "MECH", "IT"]
+        required: true
     },
-    createdBy: {
-        type: mongoose.SchemaTypes.ObjectId,
-        required: true,
-        ref: 'Users'
+    designation: {
+        type: String,
+        required: true
     }
 }, {
     timestamps: true
 });
 
-const model = mongoose.model('Students', studentSchema)
+const model = mongoose.model('Employees', employeesSchema)
 
 export default model
