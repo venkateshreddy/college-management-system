@@ -48,6 +48,11 @@ const employeesSchema = new mongoose.Schema({
     designation: {
         type: String,
         required: true
+    },
+    createdBy: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'Users',
+        required: true
     }
 }, {
     timestamps: true
