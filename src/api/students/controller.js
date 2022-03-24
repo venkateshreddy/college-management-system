@@ -1,21 +1,15 @@
-import { verifyToken } from '../helpers';
 import Students from './model';
 
 export const create = (req, res) => {
-  const userData = verifyToken(req);
-  if (userData && userData.role === 'ADMIN') {
-    const student = req.body;
-    student.createdBy = userData.id;
-    Students.create(student, (err, result) => {
-      if (err) {
-        res.send(err);
-      } else {
-        res.send(result);
-      }
-    })
-  } else {
-    res.send({ error: true, code: 401, message: "Unauthorised Access" });
-  }
+  const student = req.body;
+  student.createdBy = req.user.id;
+  Students.create(student, (err, result) => {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(result);
+    }
+  })
 }
 
 export const show = (req, res) =>
