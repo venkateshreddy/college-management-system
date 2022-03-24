@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import { checkAuth } from '../helpers'
 
 import {
   create,
@@ -11,23 +12,19 @@ import {
 
 const router = new Router()
 
-//POST Request http://localhost:8080/students
-router.post('/', create)
+router.post('/', checkAuth(true, ['ADMIN']), create)
 
-//PUT Request http://localhost:8080/students/123
-router.put('/:id', update)
+router.put('/:id', checkAuth(true, ['ADMIN']), update)
 
-//GET Request http://localhost:8080/students/search
-router.get('/search', searchStudent)
+router.get('/search', checkAuth(true, ['ADMIN','FACULTY']), searchStudent)
 
-//GET Request http://localhost:8080/students
-router.get('/', index)
+router.get('/', checkAuth(true, ['ADMIN','FACULTY']), index)
 
-//GET Request http://localhost:8080/students/123
-router.get('/:id', show)
+router.get('/:id', checkAuth(true, ['ADMIN','FACULTY']), show)
 
-//DELETE Request http://localhost:8080/students/123
-router.delete('/:id', destroy)
+router.delete('/:id', checkAuth(true, ['ADMIN']), destroy)
 
+
+//need to write another method to see his/her details as a student
 
 export default router
