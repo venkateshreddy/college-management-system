@@ -1,5 +1,7 @@
 import Employee from './model';
 export const create = (req, res) => {
+  const employee = req.body;
+  employee.createdBy = req.user.id;
   Employee.create(req.body, (err, result) => {
     if (err) {
       res.send(err);
