@@ -1,22 +1,41 @@
-import { copyFileSync } from 'fs';
 import jwt from 'jsonwebtoken';
 
-export const verifyToken = (req) => {
-    const token = extractToken(req);  
-    if (!token) {
-        return false;
-    }
+const  sendErrorResponse = (res, code, message) => {
+    res.status(code);
+    res.send({ error: true, message });
+}
 
-    let data = null;
-    try {
-        data = jwt.verify(token, 'MY-PROJECT-SECRET-KEY');
-    } catch(err) {
-        console.log("Invalid token")
-    }
-    if (data) {
-        return data;
+export const checkAuth = (authenticationRequired=false, requiredRoles=[]) => (req, res, next) => {
+    if (authenticationRequired) {
+        const token = extractToken(req);  
+        if (!token) {
+            sendErrorResponse(res, 401, "Unauthenticated user.");
+        } else {
+            let user = null;
+            try {
+                user = jwt.verify(token, 'MY-PROJECT-SECRET-KEY');
+            } catch(err) {
+                sendErrorResponse(res, 401, "Unauthenticated user. Invalid/Expired token.");
+            }
+            if (user) {
+                //add logged in user data in to the request. Sothat next fucntion can use user data
+                req.user = user;
+                
+                if (requiredRoles && requiredRoles.length > 0) {
+                    if (requiredRoles.includes(user.role)) {
+                        next();  //Authentication passed and Authorization passed.
+                    } else {
+                        sendErrorResponse(res, 401, "You are not authorized to perform this action.");
+                    }
+                } else {
+                    next(); //Authentication passed but authorization is not needed.
+                }
+            } else {
+                sendErrorResponse(res, 401, "Unauthenticated user.");
+            }
+        }
     } else {
-        return false
+        next();     //No authentication and authorization needed.
     }
 }
 
