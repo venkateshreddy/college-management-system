@@ -7,13 +7,20 @@ import {
   show,
   update,
   destroy,
-  searchEmployee
+  searchEmployee,
+  showMyProfile,
+  updateProfile
 } from './controller'
 
 const router = new Router()
 
 //POST Request http://localhost:8080/employees
 router.post('/', checkAuth(true, ['ADMIN']), create)
+
+router.get('/me', checkAuth(true), showMyProfile)
+
+//PUT Request http://localhost:8080/employees/self-update
+router.put('/self-update', checkAuth(true), updateProfile)
 
 //PUT Request http://localhost:8080/employees/123
 router.put('/:id', checkAuth(true, ['ADMIN']), update)

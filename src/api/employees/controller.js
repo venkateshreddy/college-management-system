@@ -11,6 +11,16 @@ export const create = (req, res) => {
   })
 }
 
+export const showMyProfile = (req, res) =>
+  Employee.findOne({ userId: req.user.id }, (err, result) => {
+    if (err) {
+      res.send(err);
+    } else {
+      console.log(result, req.user.id, 'result')
+      res.send(result);
+    }
+  })
+
 export const show = (req, res) =>
   Employee.findById(req.params.id, (err, result) => {
     if (err) {
@@ -30,6 +40,26 @@ export const searchEmployee = (req, res) => {
       res.send(err);
     } else {
       res.send(results);
+    }
+  })
+}
+
+export const updateProfile = (req, res) => {
+  const updateObj = {};
+  if (req.body.name) {
+    updateObj['name'] = req.body.name;
+  }
+  if (req.body.email) {
+    updateObj['email'] = req.body.email;
+  } 
+  if (req.body.qualification) {
+    updateObj['qualification'] = req.body.qualification;
+  }
+  Employee.findOneAndUpdate({ userId: req.user.id }, updateObj, { new: true}, (err, updatedObj) => {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(updatedObj);
     }
   })
 }

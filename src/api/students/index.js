@@ -7,12 +7,15 @@ import {
   show,
   update,
   destroy,
-  searchStudent
+  searchStudent,
+  showMyProfile
 } from './controller'
 
 const router = new Router()
 
 router.post('/', checkAuth(true, ['ADMIN']), create)
+
+router.get('/me', checkAuth(true), showMyProfile)
 
 router.put('/:id', checkAuth(true, ['ADMIN']), update)
 

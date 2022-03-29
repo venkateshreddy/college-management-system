@@ -12,6 +12,16 @@ export const create = (req, res) => {
   })
 }
 
+export const showMyProfile = (req, res) => 
+  Students.findOne({ userId: req.user.id }, (err, result) => {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(result);
+    }
+  })
+
+
 export const show = (req, res) =>
   Students.findById(req.params.id, (err, result) => {
     if (err) {
