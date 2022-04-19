@@ -2,7 +2,7 @@ import Students from './model';
 
 export const create = (req, res) => {
   const student = req.body;
-  student.createdBy = req.user.id;
+  // student.createdBy = req.user.id;
   Students.create(student, (err, result) => {
     if (err) {
       res.send(err);
